@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <img src="./assets/logo.png"> -->
+    <HelloWorld msg="Welcome to PDF tools App"/>
+    <!-- <h3>{{msg}}</h3> -->
   </div>
 </template>
 
@@ -12,7 +13,8 @@ export default {
   name: 'app',
   components: {
     HelloWorld
-  }
+  },
+  data(){return {msg:"dsd"}}
 }
 </script>
 
