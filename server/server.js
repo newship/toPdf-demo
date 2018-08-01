@@ -1,21 +1,22 @@
 
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 var express = require("express");
-var app = express();
 var path = require('path');
 
-app.all('*',function (req,res,next) {
+var app = express();
 
-    res.header("Access-Control-Allow-Origin", req.headers.origin);
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    // res.header("Content-Type", "application/json;charset=utf-8");
+// app.all('*',function (req,res,next) {
 
-    next()
-});
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+//     res.header("Access-Control-Allow-Origin", req.headers.origin);
+//     res.header('Access-Control-Allow-Credentials', true);
+//     res.header("Access-Control-Allow-Headers", "Content-Type");
+//     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+//     // res.header("Content-Type", "application/json;charset=utf-8");
+
+//     next()
+// });
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false}));
 // app.use(express.static(__dirname + '/dist/'));
 app.use(express.static(__dirname));
 // app.get('*', function (req, res){
@@ -24,8 +25,14 @@ app.use(express.static(__dirname));
 //     res.sendFile(path.resolve(__dirname, 'index.html'))
 // });
 
+app.get('/index',function(req,res){
+    res.json({"state":1})
+})
 
-
+app.post('/upload',function(req,res){
+    var file = req.body.file;
+    console.log('file',file);
+})
 
 // app.post('/api/download',
 //     function (req, res) {
