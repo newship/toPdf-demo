@@ -9,32 +9,19 @@ var docxConverter = require('docx-pdf');
 var app = express();
 
 app.all('*',function (req,res,next) {
-    // console.log(req.headers)
     res.header("Access-Control-Allow-Origin", req.headers.origin);
     // res.header('Access-Control-Allow-Credentials', true);
     // res.header("Access-Control-Allow-Headers", "Content-Type");
     // res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    // // res.header("Content-Type", "application/json;charset=utf-8");
     next()
 });
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false}));
-// app.use(express.static(__dirname + '/dist/'));
 app.use(express.static(__dirname));
-// app.get('*', function (req, res){
-//     res.setHeader('Content-Type', 'text/html');
-//     // res.sendFile(path.resolve(__dirname, 'src', 'index.html'))
-//     res.sendFile(path.resolve(__dirname, 'index.html'))
-// });
 
-app.get('/index',function(req,res){
-    res.json({"state":1})
-})
 
 app.post('/upload',function(req,res){
     
     var file = req.body.file;
-    // console.log(req)
     var filePath =path.resolve('./files');
     if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath);
@@ -74,9 +61,6 @@ app.post('/upload',function(req,res){
             });
         }
     });
-
-
-    console.log('file',file);
 })
 
 
@@ -93,10 +77,9 @@ app.get('/download',
             }
         })
 });
-function sleep(d){
-    for(var t = Date.now();Date.now() - t <= d;);
-  }
-  
+// function sleep(d){
+//     for(var t = Date.now();Date.now() - t <= d;);
+//   }
   
 
 var server = app.listen(5050, '0.0.0.0',function(){

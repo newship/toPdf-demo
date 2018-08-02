@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <HelloWorld msg="Welcome to PDF tools App"/>
+    <ToPdf msg="Welcome to PDF tools App"/>
     <!-- <h3>{{msg}}</h3> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/ToPdf.vue'
+import ToPdf from './components/ToPdf.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    ToPdf
   },
   data(){return {msg:"dsd"}}
 }
