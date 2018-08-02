@@ -1,21 +1,23 @@
 
-// var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var express = require("express");
 var path = require('path');
+var fs = require('fs');
+var formidable = require("formidable");
 
 var app = express();
 
-// app.all('*',function (req,res,next) {
+app.all('*',function (req,res,next) {
+    // console.log(req.headers)
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+    // res.header('Access-Control-Allow-Credentials', true);
+    // res.header("Access-Control-Allow-Headers", "Content-Type");
+    // res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    // // res.header("Content-Type", "application/json;charset=utf-8");
 
-//     res.header("Access-Control-Allow-Origin", req.headers.origin);
-//     res.header('Access-Control-Allow-Credentials', true);
-//     res.header("Access-Control-Allow-Headers", "Content-Type");
-//     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-//     // res.header("Content-Type", "application/json;charset=utf-8");
-
-//     next()
-// });
-// app.use(bodyParser.json());
+    next()
+});
+app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false}));
 // app.use(express.static(__dirname + '/dist/'));
 app.use(express.static(__dirname));
@@ -30,9 +32,47 @@ app.get('/index',function(req,res){
 })
 
 app.post('/upload',function(req,res){
+    sleep(5000);
     var file = req.body.file;
+    // console.log(req)
+    var filePath =path.resolve('./files');
+    if (!fs.existsSync(filePath)) {
+        fs.mkdirSync(filePath);
+    }
+    var form = new formidable.IncomingForm();
+    form.uploadDir = filePath; //设置上传目录
+    form.parse(req, function(err, fields, files) {
+        if (err) {
+            return res.json(err);
+        }
+        var extName = ''; //后缀名
+        var fileName = files.file.name;
+        // console.log(files.file)
+        switch (files.file.type) {
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                extName = 'docx';
+                break;
+            case 'application/msword':
+                extName = 'doc';
+                break;
+        }
+        if (extName.length === 0) {
+            return  res.json({
+                msg: '只支持doc和docx格式文件'
+            });
+        } else {
+            var newPath = form.uploadDir + '/' + fileName;
+            console.log("new",newPath);
+            fs.renameSync(files.file.path, newPath); //重命名
+            
+            return res.json({status:'1',path:newPath});
+        }
+    });
+
+
     console.log('file',file);
 })
+
 
 // app.post('/api/download',
 //     function (req, res) {
@@ -52,7 +92,11 @@ app.post('/upload',function(req,res){
 //             }
 //         })
 // });
-
+function sleep(d){
+    for(var t = Date.now();Date.now() - t <= d;);
+  }
+  
+  
 
 var server = app.listen(5050, '0.0.0.0',function(){
     var host = server.address().address;
