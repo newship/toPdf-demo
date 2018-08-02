@@ -1,21 +1,25 @@
-# topdf
+# wordTopdf  
+A little wordTopdf demo, It's written in Vue.js, element-ui.js and Node.
 
-## Project setup
+## Requirements
+node 8  
+vue-cli 3.0
+
+## Installation
 ```
-npm install
+$ npm install
+$ cd server
+$ npm install
 ```
 
-### Compiles and hot-reloads for development
+
+## Developers
 ```
 npm run serve
+cd server
+npm start
 ```
+Open http://localhost:8080/
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
+## License
+Code released under the [MIT License](https://opensource.org/licenses/MIT).
