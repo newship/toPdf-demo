@@ -4,6 +4,7 @@ var express = require("express");
 var path = require('path');
 var fs = require('fs');
 var formidable = require("formidable");
+var docxConverter = require('docx-pdf');
 
 var app = express();
 
@@ -14,7 +15,6 @@ app.all('*',function (req,res,next) {
     // res.header("Access-Control-Allow-Headers", "Content-Type");
     // res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     // // res.header("Content-Type", "application/json;charset=utf-8");
-
     next()
 });
 app.use(bodyParser.json());
@@ -32,7 +32,7 @@ app.get('/index',function(req,res){
 })
 
 app.post('/upload',function(req,res){
-    sleep(5000);
+    
     var file = req.body.file;
     // console.log(req)
     var filePath =path.resolve('./files');
@@ -56,16 +56,22 @@ app.post('/upload',function(req,res){
                 extName = 'doc';
                 break;
         }
-        if (extName.length === 0) {
-            return  res.json({
-                msg: '只支持doc和docx格式文件'
-            });
+        if (extName!== 'docx') {
+            return  res.sendStatus(500);
         } else {
             var newPath = form.uploadDir + '/' + fileName;
+            var newName = fileName.split('.')[0]+'.pdf';
             console.log("new",newPath);
             fs.renameSync(files.file.path, newPath); //重命名
-            
-            return res.json({status:'1',path:newPath});
+            //sleep(5000);
+            docxConverter(newPath,'./files/'+newName,function(err,result){
+                if(err){
+                  console.log(err);
+                  return  res.sendStatus(500);
+                }
+                console.log('result'+result);
+                return res.json({status:'1',file:newName});
+            });
         }
     });
 
@@ -74,24 +80,19 @@ app.post('/upload',function(req,res){
 })
 
 
-// app.post('/api/download',
-//     function (req, res) {
-//         var file = req.body.file_name;
-//         console.log('file',file);
-
-//         res.download('public/files/'+ file + '.pdf', function(err){
-//             if (err) {
-//                 console.log('err',err);
-//                 res.json({state:'99999',info:err});
-//                 // Handle error, but keep in mind the response may be partially-sent
-//                 // so check res.headersSent
-//             } else {
-//                 console.log('download success');
-//                 // res.json({state:'20000'});
-//                 // decrement a download credit, etc.
-//             }
-//         })
-// });
+app.get('/download',
+    function (req, res) {
+        var file = req.query.file;
+        // console.log('file',file);
+        res.download('files/'+ file, function(err){
+            if (err) {
+                console.log('err',err);
+                res.json({state:'99999',info:err});
+            } else {
+                console.log('download success');
+            }
+        })
+});
 function sleep(d){
     for(var t = Date.now();Date.now() - t <= d;);
   }

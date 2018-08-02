@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/ToPdf.vue'
 
 export default {
   name: 'app',
